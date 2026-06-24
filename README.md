@@ -115,6 +115,19 @@ blend amounts toward black or white.
 | **Expansion** | `package:garnish/garnish_expansion.dart` | `GarnishColorExpansion` — palette expand/contract utilities |
 
 
+## Documentation
+
+| Guide | What's inside |
+|---|---|
+| [Getting Started](docs/Getting-Started.md) | Install, first operation, theming, advanced config |
+| [Core API](docs/Core-API.md) | `Garnish` contrast generation reference |
+| [GarnishMath](docs/GarnishMath.md) | Luminance, contrast ratio, classification, WCAG checks |
+| [GarnishColor](docs/GarnishColor.md) | Blend, average, brightness/luminance, hex conversion |
+| [Expansion](docs/Expansion.md) | Palette expand/contract strategies |
+| [Recipes](docs/Recipes.md) | Copy-paste Flutter widgets & patterns |
+| [Error Handling](docs/Error-Handling.md) | Null-safety model & `GarnishError` |
+
+
 ## API at a glance
 
 `Garnish`

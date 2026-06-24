@@ -188,5 +188,10 @@ final scheme = background.colorScheme();                 // Brightness.light / .
 
 ## Next Steps
 
-- **[Core API](Core-API.md)** — Deep dive into the main functions.
-- Browse the [`example/`](../example) app for a live demo.
+- **[Core API](Core-API.md)** — Deep dive into the main contrast functions.
+- **[GarnishMath](GarnishMath.md)** — Luminance, contrast, and classification.
+- **[GarnishColor](GarnishColor.md)** — Blending, brightness, and hex.
+- **[Expansion](Expansion.md)** — Generate full palettes from a few colors.
+- **[Recipes](Recipes.md)** — Ready-made Flutter widgets and patterns.
+- **[Error Handling](Error-Handling.md)** — The null-safety model.
+- Browse the [`example/`](../example) app for a live, interactive demo.
