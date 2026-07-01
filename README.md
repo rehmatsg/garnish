@@ -156,7 +156,7 @@ blend amounts toward black or white.
 `GarnishColorExpansion` (expansion library)
 - `expand(colors, {to})`, `contract(colors, {to})`, `linearInterpolation(colors, {to})`
 - `simpleRepeat(colors, {to})`, `generateVariations(color, {count})`
-- `selectPrimaryColor(colors)`, `expandToGradientMesh(color, {size})`, `expandForGradient(colors)`, `contractToSolid(colors)`
+- `selectPrimaryColor(colors)`, `expandToGradientMesh(color, {size, spread})`, `expandForGradient(colors)`, `contractToSolid(colors)`
 
 
 ## Differences from the Swift package

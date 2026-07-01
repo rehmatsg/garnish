@@ -170,7 +170,7 @@ static List<Color> linearInterpolation(List<Color> colors, {required int to});
 static List<Color> simpleRepeat(List<Color> colors, {required int to});
 static List<Color> generateVariations(Color color, {required int count});
 static Color selectPrimaryColor(List<Color> colors);
-static List<Color> expandToGradientMesh(Color color, {int size = 16});
+static List<Color> expandToGradientMesh(Color color, {int size = 16, double spread = 0.35});
 static List<Color> expandForGradient(List<Color> colors);
 static Color contractToSolid(List<Color> colors);
 ```

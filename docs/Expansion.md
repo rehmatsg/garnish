@@ -87,13 +87,22 @@ final solid = GarnishColorExpansion.contractToSolid(palette);
 
 ## 🟦 Gradient helpers
 
-### `expandToGradientMesh(color, {size = 16})`
+### `expandToGradientMesh(color, {size = 16, spread = 0.35})`
 
-Expands one color into `size` variations — handy for mesh / animated gradients
-(`16` = a 4×4 mesh by default).
+Expands one color into `size` colors — handy for mesh / animated gradients
+(`16` = a 4×4 mesh by default). Unlike the hue-shifting `generateVariations`,
+this produces a **hue-stable shade/tint ramp** (the "shade + tint" trick behind
+SwiftUI's `Color.gradient`): darker stops scale toward black, lighter stops
+blend toward white, and hue stays constant. The work happens in RGB space to
+avoid the perceptual kink HSL lightness has around `0.5`.
+
+`spread` is the dial for how far stops drift from `color` (clamped to `[0, 1]`):
+`0.1`–`0.15` gives a subtle, SwiftUI-like feel, while `0.3`–`0.4` gives a
+tighter, more pronounced ramp. Stops run darkest → lightest.
 
 ```dart
-final mesh = GarnishColorExpansion.expandToGradientMesh(Colors.teal); // 16 colors
+final mesh   = GarnishColorExpansion.expandToGradientMesh(Colors.teal); // 16 colors
+final subtle = GarnishColorExpansion.expandToGradientMesh(Colors.teal, size: 5, spread: 0.12);
 ```
 
 ### `expandForGradient(colors)`

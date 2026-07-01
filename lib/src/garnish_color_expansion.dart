@@ -227,10 +227,63 @@ abstract final class GarnishColorExpansion {
 
   // MARK: - Specific use cases
 
-  /// Expands a single [color] to a gradient mesh ([size] colors, 16 by
-  /// default — a 4×4 mesh).
-  static List<Color> expandToGradientMesh(Color color, {int size = 16}) =>
-      generateVariations(color, count: size);
+  /// Expands a single [color] to a gradient mesh of [size] colors ([size] is
+  /// `16` by default — a 4×4 mesh).
+  ///
+  /// Unlike the hue-shifting [generateVariations], this produces a hue-stable
+  /// shade/tint ramp — the same "shade + tint" trick behind SwiftUI's
+  /// `Color.gradient`. Stops sweep from the darkest at index `0` to the
+  /// lightest at index `size - 1`, keeping hue constant and working in RGB
+  /// space to avoid the perceptual kink HSL lightness has around `0.5`:
+  ///
+  /// - **Darker stops** scale every channel toward black uniformly, which
+  ///   preserves hue and saturation exactly.
+  /// - **Lighter stops** blend toward white, which is what a tint does (and
+  ///   naturally desaturates a touch, matching real-world lightening).
+  ///
+  /// [spread] is the dial controlling how far stops drift from [color]:
+  /// `0.1`–`0.15` gives a subtle, SwiftUI-like two-stop feel, while `0.3`–`0.4`
+  /// gives a tighter, more pronounced ramp. It is clamped to `[0, 1]`.
+  static List<Color> expandToGradientMesh(
+    Color color, {
+    int size = 16,
+    double spread = 0.35,
+  }) {
+    if (size <= 0) return <Color>[];
+    if (size == 1) return [color];
+
+    final clampedSpread = spread.clamp(0.0, 1.0).toDouble();
+    final r = color.r, g = color.g, b = color.b;
+    final result = <Color>[];
+
+    for (var i = 0; i < size; i++) {
+      // Normalized position: -0.5 (darkest) .. +0.5 (lightest).
+      final t = i / (size - 1) - 0.5;
+      final factor = t * 2 * clampedSpread; // -spread .. +spread
+
+      double nr, ng, nb;
+      if (factor <= 0) {
+        // Darker: scale toward black, preserving hue and saturation.
+        final k = 1 + factor; // factor is negative here
+        nr = r * k;
+        ng = g * k;
+        nb = b * k;
+      } else {
+        // Lighter: blend toward white.
+        nr = r + factor * (1 - r);
+        ng = g + factor * (1 - g);
+        nb = b + factor * (1 - b);
+      }
+
+      result.add(Color.from(
+        alpha: 1.0,
+        red: nr.clamp(0.0, 1.0).toDouble(),
+        green: ng.clamp(0.0, 1.0).toDouble(),
+        blue: nb.clamp(0.0, 1.0).toDouble(),
+      ));
+    }
+    return result;
+  }
 
   /// Expands [colors] for gradient backgrounds (16 colors / 4×4 mesh).
   static List<Color> expandForGradient(List<Color> colors) =>

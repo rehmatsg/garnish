@@ -2,7 +2,7 @@ name: garnish
 description: >-
   Intelligent color utilities for accessibility, contrast optimization, and
   visual harmony. A Flutter port of the SwiftUI package Garnish.
-version: 1.0.0
+version: 1.1.0
 repository: https://github.com/rehmatsg/garnish
 homepage: https://github.com/rehmatsg/garnish
 issue_tracker: https://github.com/rehmatsg/garnish/issues

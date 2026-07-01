@@ -286,6 +286,41 @@ void main() {
           GarnishColorExpansion.expandForGradient([blue, red]), hasLength(16));
     });
 
+    test('expandToGradientMesh produces a hue-stable shade/tint ramp', () {
+      // size 1 returns the seed unchanged; non-positive sizes are empty.
+      expect(GarnishColorExpansion.expandToGradientMesh(blue, size: 1), [blue]);
+      expect(GarnishColorExpansion.expandToGradientMesh(blue, size: 0), isEmpty);
+
+      final ramp = GarnishColorExpansion.expandToGradientMesh(blue,
+          size: 5, spread: 0.3);
+      expect(ramp, hasLength(5));
+
+      // Brightness increases monotonically from darkest to lightest.
+      final luminance = ramp.map(GarnishMath.relativeLuminance).toList();
+      for (var i = 1; i < luminance.length; i++) {
+        expect(luminance[i], greaterThanOrEqualTo(luminance[i - 1]));
+      }
+
+      // The middle stop equals the seed (t == 0 leaves the color untouched).
+      expect(ramp[2].toARGB32(), blue.toARGB32());
+
+      // Hue stays constant across the ramp (shade/tint, no hue shift).
+      final hue = HSVColor.fromColor(blue).hue;
+      for (final color in ramp) {
+        expect(HSVColor.fromColor(color).hue, closeTo(hue, 1.0));
+      }
+
+      // A larger spread pushes the extremes further apart.
+      final tight = GarnishColorExpansion.expandToGradientMesh(blue,
+          size: 5, spread: 0.1);
+      final wide = GarnishColorExpansion.expandToGradientMesh(blue,
+          size: 5, spread: 0.5);
+      expect(GarnishMath.relativeLuminance(wide.last),
+          greaterThan(GarnishMath.relativeLuminance(tight.last)));
+      expect(GarnishMath.relativeLuminance(wide.first),
+          lessThan(GarnishMath.relativeLuminance(tight.first)));
+    });
+
     test('contractToSolid returns a single color', () {
       final solid = GarnishColorExpansion.contractToSolid([red, green, blue]);
       expect([red, green, blue].map((c) => c.toARGB32()),
